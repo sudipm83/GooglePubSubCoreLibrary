@@ -35,12 +35,12 @@ public class PubSubClient {
     }
 
     public Topic getTopic() throws Exception {
-        // Create a new topic if it does not exist then get the topic by name
+        // Get a topic with specific topic and project id
         ProjectTopicName topicName = ProjectTopicName.of(PROJECT_ID, TOPIC_ID);
-        if (topicAdminClient.getTopic(topicName) == null) {
-            topicAdminClient.createTopic(topicName);
+        if (topicAdminClient.getTopic(topicName) != null) {
+            return topicAdminClient.getTopic(topicName);
         }
-        return topicAdminClient.getTopic(topicName);
+        return null;
     }
 
     public void getSubscription() throws InterruptedException {
