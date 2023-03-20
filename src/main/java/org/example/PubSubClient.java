@@ -3,10 +3,7 @@ package org.example;
 import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.pubsub.v1.*;
-import com.google.pubsub.v1.ProjectTopicName;
-import com.google.pubsub.v1.ProjectSubscriptionName;
-import com.google.pubsub.v1.PubsubMessage;
-import com.google.pubsub.v1.SubscriptionName;
+import com.google.pubsub.v1.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -37,12 +34,13 @@ public class PubSubClient {
 
     }
 
-    public void getTopic() throws Exception {
-        // Create a new topic, or get an existing topic by name
+    public Topic getTopic() throws Exception {
+        // Create a new topic if it does not exist then get the topic by name
         ProjectTopicName topicName = ProjectTopicName.of(PROJECT_ID, TOPIC_ID);
-        if (!isTopicExists()) {
+        if (topicAdminClient.getTopic(topicName) == null) {
             topicAdminClient.createTopic(topicName);
         }
+        return topicAdminClient.getTopic(topicName);
     }
 
     public void getSubscription() throws InterruptedException {
@@ -65,9 +63,5 @@ public class PubSubClient {
         }
     }
 
-    public boolean isTopicExists() throws Exception {
-        ProjectTopicName topicName = ProjectTopicName.of(PROJECT_ID, TOPIC_ID);
-            return topicAdminClient.getTopic(topicName) != null;
-        }
 
 }
